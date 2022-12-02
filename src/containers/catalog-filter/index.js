@@ -25,13 +25,13 @@ function CatalogFilter(){
 
   const callbacks = {
     // Сортировка
-    onSort: useCallback(sort => store.get('catalog').setParams({sort}), []),
+    onSort: useCallback(sort => store.get('catalog').setParams({params: {sort}, eventType: 'filter'}), []),
     // Поиск
-    onSearch: useCallback(query => store.get('catalog').setParams({query, page: 1}), []),
+    onSearch: useCallback(query => store.get('catalog').setParams({params: {query, page: 1}, eventType: 'filter'}), []),
     // Сброс
     onReset: useCallback(() => store.get('catalog').resetParams(), []),
     // Фильтр по категории
-    onCategory: useCallback(category => store.get('catalog').setParams({category}), []),
+    onCategory: useCallback(category => store.get('catalog').setParams({params: {category}, eventType: 'filter'}), []),
   };
 
   // Опции для полей

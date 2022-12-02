@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import propTypes from "prop-types";
 import {cn as bem} from '@bem-react/classname'
 import './style.css';
@@ -20,12 +20,18 @@ function Pagination(props) {
   if (left > 1) items.push(1);
   // Пропуск
   if (left > 2) items.push(null);
-  // Последваотельность страниц
+  // Последовательность страниц
   for (let page = left; page <= right; page++) items.push(page)
   // Пропуск
   if (right < length - 1) items.push(null);
-  // Последнаяя страница
+  // Последняя страница
   if (right < length) items.push(length);
+
+  useEffect(() => {
+    if (items.length) {
+      props.onChange(0, items[items.length - 1]);
+    }
+  }, [])
 
   // Возвращает функцию с замыканием на номер страницы
   const clickHandler = page => {

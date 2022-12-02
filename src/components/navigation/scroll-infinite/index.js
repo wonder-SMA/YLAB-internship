@@ -20,7 +20,7 @@ function ScrollInfinite(props) {
       },
       {threshold: 0.1, rootMargin: '0px 0px -68px'}
     );
-    if (props.dataLenght) {
+    if (props.dataLength && !props.isLastPage) {
       const list = ref.current.childNodes[0].children;
       const lastChild = list[list.length - 1];
       // для последнего потомка снова добавляем observer
@@ -28,7 +28,7 @@ function ScrollInfinite(props) {
         infiniteObserver.observe(lastChild);
       }
     }
-  }, [props.dataLenght])
+  }, [props.dataLength, props.isLastPage])
 
   return (
     <div className={cn()} ref={ref}>
@@ -37,19 +37,14 @@ function ScrollInfinite(props) {
   );
 }
 
-// ScrollInfinite.propTypes = {
-//   page: PropTypes.number.isRequired,
-//   limit: PropTypes.number,
-//   count: PropTypes.number,
-//   onChange: PropTypes.func,
-// }
-//
-// ScrollInfinite.defaultProps = {
-//   page: 1,
-//   limit: 10,
-//   count: 1000,
-//   onChange: () => {
-//   },
-// }
+ScrollInfinite.propTypes = {
+  onChange: PropTypes.func,
+  dataLength: PropTypes.number,
+  isLastPage: PropTypes.bool.isRequired
+}
+
+ScrollInfinite.defaultProps = {
+  onChange: () => {}
+}
 
 export default React.memo(ScrollInfinite);

@@ -18,6 +18,7 @@ function CatalogList() {
     limit: state.catalog.params.limit,
     count: state.catalog.count,
     waiting: state.catalog.waiting,
+    lastPage: state.catalog.lastPage
   }));
 
   const {t} = useTranslate();
@@ -26,14 +27,20 @@ function CatalogList() {
     // Добавление в корзину
     addToBasket: useCallback(_id => store.get('basket').addToBasket(_id), []),
     // Пагинация
-    onPaginate: useCallback(page => store.get('catalog').setParams({params: {page}, type: 'click'}), []),
+    onPaginate: useCallback((page, lastPage) => {
+      if (!page && lastPage) {
+        store.get('catalog').setLastPage(lastPage);
+      } else if (page) {
+        store.get('catalog').setParams({params: {page}, eventType: 'click'})
+      }
+    }, []),
     // Бесконечный скролл
     onScroll: useCallback(() => store.get('catalog').setParams(
         {
           params: {page: select.page + 1},
-          type: 'scroll'
+          eventType: 'scroll'
         }
-      ), [select.page]
+      ), [select.page, select.lastPage]
     ),
   };
 
@@ -44,7 +51,11 @@ function CatalogList() {
   }
 
   return (
-    <ScrollInfinite onChange={callbacks.onScroll} dataLenght={select.items.length}>
+    <ScrollInfinite
+      onChange={callbacks.onScroll}
+      dataLength={select.items.length}
+      isLastPage={select.page === select.lastPage || !select.lastPage}
+    >
       <Spinner active={select.waiting}>
         <List items={select.items} renderItem={renders.item}/>
         <Pagination count={select.count} page={select.page} limit={select.limit} onChange={callbacks.onPaginate}/>

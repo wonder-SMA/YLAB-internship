@@ -15,6 +15,7 @@ class CatalogState extends StateModule {
     return {
       items: [],
       count: 0,
+      lastPage: 0,
       params: {
         page: 1,
         limit: 10,
@@ -33,7 +34,7 @@ class CatalogState extends StateModule {
    * @return {Promise<void>}
    */
   async initParams(params = {}) {
-    // Параметры из URl. Их нужно валидирвать, приводить типы и брать только нужные
+    // Параметры из URl. Их нужно валидировать, приводить типы и брать только нужные
     const urlParams = qs.parse(window.location.search);
     let validParams = {};
     if (urlParams.page) validParams.page = Number(urlParams.page) || 1;
@@ -45,7 +46,7 @@ class CatalogState extends StateModule {
     // Итоговые параметры из начальных, из URL и из переданных явно
     const newParams = {...this.initState().params, ...validParams, ...params};
     // Установка параметров и подгрузка данных
-    await this.setParams(newParams, true);
+    await this.setParams({params: newParams, eventType: 'click'}, true);
   }
 
   /**
@@ -57,18 +58,32 @@ class CatalogState extends StateModule {
     // Итоговые параметры из начальных, из URL и из переданных явно
     const newParams = {...this.initState().params, ...params};
     // Установка параметров и подгрузка данных
-    await this.setParams(newParams);
+    await this.setParams({params: newParams, eventType: 'click'});
+  }
+
+  /**
+   * Установка последней страницы
+   * @param lastPage
+   * @return {Promise<void>}
+   */
+  async setLastPage(lastPage) {
+    this.setState({
+      ...this.getState(),
+      lastPage
+    });
   }
 
   /**
    * Установка параметров и загрузка списка товаров
    * @param params
-   * @param type
+   * @param eventType
+   * @param lastPage
    * @param historyReplace {Boolean} Заменить адрес (true) или сделает новую запись в истории браузера (false)
-   * @returns {Promise<void>}
+   * @return {Promise<void>}
    */
-  async setParams({params = {}, type}, historyReplace = false) {
+  async setParams({params = {}, eventType}, historyReplace = false) {
     const newParams = {...this.getState().params, ...params};
+    if (eventType === 'filter' && this.getState().items.length > 10) newParams.page =  1;
 
     // Установка новых параметров и признака загрузки
     this.setState({
@@ -96,7 +111,7 @@ class CatalogState extends StateModule {
     // Установка полученных данных и сброс признака загрузки
     this.setState({
       ...this.getState(),
-      items: type === 'click' ? json.result.items : [...this.getState().items, ...json.result.items],
+      items: ['click', 'filter'].includes(eventType) ? json.result.items : [...this.getState().items, ...json.result.items],
       count: json.result.count,
       waiting: false
     }, 'Обновление списка товара');
