@@ -9,6 +9,7 @@ import Login from "./login";
 import Profile from "./profile";
 import Modals from "@src/app/modals";
 import Chat from "@src/app/chat";
+import Paint from "@src/app/paint";
 
 /**
  * Приложение
@@ -29,6 +30,7 @@ function App() {
         <Route path={"/login"} element={<Login/>}/>
         <Route path={"/profile"} element={<Protected redirect={'/login'}><Profile/></Protected>}/>
         <Route path={"/chat"} element={<Protected redirect={'/login'}><Chat/></Protected>}/>
+        <Route path={"/paint"} element={<Paint/>}/>
       </Routes>
       <Modals/>
     </>

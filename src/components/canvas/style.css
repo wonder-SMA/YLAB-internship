@@ -1,0 +1,9 @@
+.Canvas {
+  height: 100%;
+  border: 4px solid #423189;
+}
+
+.Canvas canvas {
+  height: 100%;
+  width: 100%;
+}

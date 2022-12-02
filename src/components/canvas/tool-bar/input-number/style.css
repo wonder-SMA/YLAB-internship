@@ -1,0 +1,10 @@
+.InputNumber {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.InputNumber input {
+  width: 75px;
+  margin-left: 4px;
+}

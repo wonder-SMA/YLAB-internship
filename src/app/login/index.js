@@ -50,7 +50,6 @@ function Login() {
       <TopContainer/>
       <HeadContainer/>
       <ToolsContainer/>
-
       <LayoutFlex>
         <form onSubmit={callbacks.onSubmit}>
           <h2>{t('auth.title')}</h2>

@@ -1,8 +1,10 @@
 {
   "title.shop": "Магазин",
   "title.chat": "Чат",
+  "title.paint": "Пэйнт",
   "menu.main": "Главная",
   "menu.chat": "Чат",
+  "menu.paint": "Пэйнт",
   "basket.title": "Корзина",
   "basket.open": "Перейти",
   "basket.close": "Закрыть",

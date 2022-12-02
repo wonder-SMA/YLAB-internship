@@ -1,0 +1,13 @@
+.InputColor {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.InputColor input {
+  width: 32px;
+  height: 32px;
+  margin-left: 4px;
+  border: none;
+  -webkit-appearance: none;
+}
