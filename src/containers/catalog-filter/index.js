@@ -5,11 +5,12 @@ import useTranslate from "@src/hooks/use-translate";
 import Select from "@src/components/elements/select";
 import Input from "@src/components/elements/input";
 import LayoutFlex from "@src/components/layouts/layout-flex";
-import {categories} from "@src/store/exports";
 import listToTree from "@src/utils/list-to-tree";
 import treeToList from "@src/utils/tree-to-list";
+import SelectCustom from "@src/components/elements/select-custom";
+import {countries} from '@src/countries.js';
 
-function CatalogFilter() {
+function CatalogFilter(){
 
   const store = useStore();
 
@@ -49,13 +50,24 @@ function CatalogFilter() {
         (item, level) => ({value: item._id, title: '- '.repeat(level) + item.title})
       )
     ], [select.categories]),
+
+    countries: useMemo(() => [
+      ...countries.map(country => ({
+        value: country.value ? country.value : country.title.slice(0, 2).toUpperCase(),
+        title: country.title
+      }))
+    ], [countries])
   }
 
   return (
     <LayoutFlex flex="start" indent="big">
       <Select onChange={callbacks.onCategory} value={select.category} options={options.categories}/>
       <Select onChange={callbacks.onSort} value={select.sort} options={options.sort}/>
-      <Input onChange={callbacks.onSearch} value={select.query} placeholder={'Поиск'} theme="big"/>
+      <SelectCustom
+        options={options.countries}
+        code={true}
+      />
+      <Input onChange={callbacks.onSearch} value={select.query} placeholder="Поиск" theme="big"/>
       <button onClick={callbacks.onReset}>{t('filter.reset')}</button>
     </LayoutFlex>
   );

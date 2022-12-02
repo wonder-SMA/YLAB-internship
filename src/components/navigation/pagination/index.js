@@ -59,8 +59,7 @@ Pagination.defaultProps = {
   limit: 10,
   count: 1000,
   indent: 1,
-  onChange: () => {
-  },
+  onChange: () => {},
 }
 
 export default React.memo(Pagination);

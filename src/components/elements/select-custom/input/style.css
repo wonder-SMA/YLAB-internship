@@ -1,0 +1,30 @@
+.SelectCustom-search {
+  padding: 5px 8px 5px 5px;
+  margin: 0;
+  border: 0;
+  font-style: italic;
+  font-size: 13px;
+  line-height: 15px;
+  color: #000000;
+  outline-offset: -2px;
+}
+
+.SelectCustom-search::-webkit-input-placeholder {
+  color: #CCCDD4;
+}
+
+.SelectCustom-search::-moz-placeholder {
+  color: #CCCDD4;
+}
+
+.SelectCustom-search:-ms-input-placeholder {
+  color: #CCCDD4;
+}
+
+.SelectCustom-search::-ms-input-placeholder {
+  color: #CCCDD4;
+}
+
+.SelectCustom-search::placeholder {
+  color: #CCCDD4;
+}

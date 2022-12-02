@@ -6,6 +6,7 @@ import List from "@src/components/elements/list";
 import Pagination from "@src/components/navigation/pagination";
 import Spinner from "@src/components/elements/spinner";
 import Item from "@src/components/catalog/item";
+import ScrollInfinite from "@src/components/navigation/scroll-infinite";
 
 function CatalogList() {
 
@@ -24,8 +25,16 @@ function CatalogList() {
   const callbacks = {
     // Добавление в корзину
     addToBasket: useCallback(_id => store.get('basket').addToBasket(_id), []),
-    // Пагианция
-    onPaginate: useCallback(page => store.get('catalog').setParams({page}), []),
+    // Пагинация
+    onPaginate: useCallback(page => store.get('catalog').setParams({params: {page}, type: 'click'}), []),
+    // Бесконечный скролл
+    onScroll: useCallback(() => store.get('catalog').setParams(
+        {
+          params: {page: select.page + 1},
+          type: 'scroll'
+        }
+      ), [select.page]
+    ),
   };
 
   const renders = {
@@ -35,10 +44,12 @@ function CatalogList() {
   }
 
   return (
-    <Spinner active={select.waiting}>
-      <List items={select.items} renderItem={renders.item}/>
-      <Pagination count={select.count} page={select.page} limit={select.limit} onChange={callbacks.onPaginate}/>
-    </Spinner>
+    <ScrollInfinite onChange={callbacks.onScroll} dataLenght={select.items.length}>
+      <Spinner active={select.waiting}>
+        <List items={select.items} renderItem={renders.item}/>
+        <Pagination count={select.count} page={select.page} limit={select.limit} onChange={callbacks.onPaginate}/>
+      </Spinner>
+    </ScrollInfinite>
   );
 }
 

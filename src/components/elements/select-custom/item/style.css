@@ -1,0 +1,60 @@
+.SelectCustom-option, .SelectCustom-option_selected {
+  max-width: 100%;
+  height: 30px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  margin: 1px 0;
+  padding: 6px;
+}
+
+.SelectCustom-option_selected {
+  background-color: #808DFF;
+}
+
+.SelectCustom-option_selected > .SelectCustom-title {
+  color: #FFFFFF;
+}
+
+.SelectCustom-code {
+  min-width: 18px;
+  width: 18px;
+  height: 18px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  margin-right: 6px;
+  font-weight: 700;
+  font-size: 8px;
+  color: #FFFFFF;
+  background: #6F7EFF;
+  border-radius: 3px;
+}
+
+.SelectCustom-title {
+  white-space: nowrap;
+  font-family: 'Arial', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 17px;
+  color: #191F4D;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.SelectCustom-title::-webkit-scrollbar {
+  height: 0;
+}

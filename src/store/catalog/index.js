@@ -33,7 +33,7 @@ class CatalogState extends StateModule {
    * @return {Promise<void>}
    */
   async initParams(params = {}) {
-    // Параметры из URl. Их нужно валидирвать, приводить типы и брать толкьо нужные
+    // Параметры из URl. Их нужно валидирвать, приводить типы и брать только нужные
     const urlParams = qs.parse(window.location.search);
     let validParams = {};
     if (urlParams.page) validParams.page = Number(urlParams.page) || 1;
@@ -56,17 +56,18 @@ class CatalogState extends StateModule {
   async resetParams(params = {}) {
     // Итоговые параметры из начальных, из URL и из переданных явно
     const newParams = {...this.initState().params, ...params};
-    // Установк параметров и подгрузка данных
+    // Установка параметров и подгрузка данных
     await this.setParams(newParams);
   }
 
   /**
-   * Устанвока параметров и загрузка списка товаров
+   * Установка параметров и загрузка списка товаров
    * @param params
-   * @param historyReplace {Boolean} Заменить адрес (true) или сделаит новую запис в истории браузера (false)
+   * @param type
+   * @param historyReplace {Boolean} Заменить адрес (true) или сделает новую запись в истории браузера (false)
    * @returns {Promise<void>}
    */
-  async setParams(params = {}, historyReplace = false) {
+  async setParams({params = {}, type}, historyReplace = false) {
     const newParams = {...this.getState().params, ...params};
 
     // Установка новых параметров и признака загрузки
@@ -88,12 +89,14 @@ class CatalogState extends StateModule {
     }, {skip: 0, search: {query: '', category: ''}});
 
     // ?search[query]=text&search[category]=id
-    const json = await this.services.api.request({url: `/api/v1/articles${qs.stringify(apiParams)}`});
+    const json = await this.services.api.request({
+      url: `/api/v1/articles${qs.stringify(apiParams)}`
+    });
 
     // Установка полученных данных и сброс признака загрузки
     this.setState({
       ...this.getState(),
-      items: json.result.items,
+      items: type === 'click' ? json.result.items : [...this.getState().items, ...json.result.items],
       count: json.result.count,
       waiting: false
     }, 'Обновление списка товара');

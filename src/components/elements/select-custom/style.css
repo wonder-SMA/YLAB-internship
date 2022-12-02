@@ -1,0 +1,117 @@
+:root {
+  --dropdown-width: 240px;
+  --dropdown-max-height: 163px;
+}
+
+* {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.SelectCustom {
+  width: var(--dropdown-width);
+  font-family: 'Arial', sans-serif;
+  z-index: 9;
+}
+
+.SelectCustom-trigger {
+  width: 100%;
+  height: 30px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: #FFFFFF;
+  cursor: default;
+}
+
+.SelectCustom-trigger > .SelectCustom-option {
+  max-width: calc(100% - 30px);
+  margin: 0;
+}
+
+.SelectCustom-trigger > img {
+  width: 20px;
+  height: 20px;
+  margin: 5px;
+}
+
+.SelectCustom-options > .SelectCustom-option:hover,
+.SelectCustom-options > .SelectCustom-option_selected:hover {
+  cursor: url(pointer.svg), pointer;
+}
+
+.SelectCustom-dropdown {
+  padding: 5px 5px 0;
+  -webkit-box-shadow: 0 8px 8px rgba(60, 60, 63, 0.25);
+  box-shadow: 0 8px 8px rgba(60, 60, 63, 0.25);
+}
+
+.SelectCustom-dropdown > .SelectCustom-options {
+  padding: 5px 0;
+}
+
+.SelectCustom-dropdown,
+.SelectCustom-dropdown_top {
+  position: absolute;
+  width: var(--dropdown-width);
+  max-height: var(--dropdown-max-height);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  background: #FFFFFF;
+  z-index: 10;
+}
+
+.SelectCustom-dropdown_top {
+  top: calc(var(--dropdown-max-height) * -1);
+  padding: 0 5px 5px;
+  -webkit-box-shadow: 0 -8px 8px rgba(60, 60, 63, 0.25);
+  box-shadow: 0 -8px 8px rgba(60, 60, 63, 0.25);
+}
+
+.SelectCustom-dropdown_top > .SelectCustom-search {
+  position: relative;
+  top: calc(var(--dropdown-max-height) - 30px);
+}
+
+.SelectCustom-dropdown_top > .SelectCustom-options {
+  position: relative;
+  top: -25px;
+}
+
+.SelectCustom-options {
+  padding-left: 0;
+  margin: 0;
+  list-style: none;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #E5E6E9 transparent;
+}
+
+.SelectCustom-options > .SelectCustom-option:hover {
+  background-color: #DBDFFF;
+}
+
+.SelectCustom-options::-webkit-scrollbar {
+  width: 8px;
+}
+
+.SelectCustom-options::-webkit-scrollbar-thumb {
+  width: 8px;
+  height: 60px;
+  background: #E5E6E9;
+  border-radius: 5px;
+}
