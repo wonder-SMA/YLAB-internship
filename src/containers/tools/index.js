@@ -1,18 +1,13 @@
 import React, {useCallback, useMemo} from "react";
-import {useStore as useStoreRedux, useSelector as useSelectorRedux} from 'react-redux';
 import useSelector from "@src/hooks/use-selector";
-import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
 import Menu from "@src/components/navigation/menu";
 import BasketSimple from "@src/components/catalog/basket-simple";
 import LayoutFlex from "@src/components/layouts/layout-flex";
-import actionsModals from '@src/store-redux/modals/actions';
+import useStore from "@src/hooks/use-store";
 
 function ToolsContainer() {
-
-  //const store = useStore();
-  const storeRedux = useStoreRedux();
-
+  const store = useStore();
   const select = useSelector(state => ({
     amount: state.basket.amount,
     sum: state.basket.sum,
@@ -23,10 +18,7 @@ function ToolsContainer() {
 
   const callbacks = {
     // Открытие корзины
-    openModalBasket: useCallback(() => {
-      //store.get('modals').open('basket');
-      storeRedux.dispatch(actionsModals.open('basket'));
-    }, []),
+    onOpen: useCallback(() => store.get('modals').open('basket'), [])
   };
 
   const options = {
@@ -38,8 +30,7 @@ function ToolsContainer() {
   return (
     <LayoutFlex flex="between" indent="big">
       <Menu items={options.menu}/>
-      <BasketSimple onOpen={callbacks.openModalBasket} amount={select.amount} sum={select.sum}
-                    t={t}/>
+      <BasketSimple onOpen={callbacks.onOpen} amount={select.amount} sum={select.sum} t={t}/>
     </LayoutFlex>
   );
 }

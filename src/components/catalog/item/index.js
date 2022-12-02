@@ -13,27 +13,31 @@ function Item(props) {
   };
 
   return (
-    <div className={cn()}>
+    <div className={cn({selectable: props.isModalBasket})} onClick={props.isModalBasket ? callbacks.onAdd : () => false}>
       <div className={cn('title')}>
-        {props.link ? <Link to={props.link}>{props.item.title}</Link> : props.item.title}
+        {props.link ? <Link onClick={props.onLink} to={props.link}>{props.item.title}</Link> : props.item.title}
       </div>
       <div className={cn('right')}>
         <div className={cn('price')}>{numberFormat(props.item.price)} {props.labelCurr}</div>
-        <button onClick={callbacks.onAdd}>{props.labelAdd}</button>
+        {!props.isModalBasket && <button onClick={callbacks.onAdd}>{props.labelAdd}</button>}
       </div>
     </div>
   )
 }
 
 Item.propTypes = {
+  isModalBasket: propTypes.bool,
   item: propTypes.object.isRequired,
   onAdd: propTypes.func,
+  onLink: propTypes.func,
   link: propTypes.string,
   labelCurr: propTypes.string,
   labelAdd: propTypes.string
 }
 
 Item.defaultProps = {
+  isModalBasket: false,
+  onLink: () => {},
   onAdd: () => {},
   labelCurr: '₽',
   labelAdd: 'Добавить'

@@ -14,8 +14,9 @@ class CatalogState extends StateModule {
   initState() {
     return {
       items: [],
+      selectedItems: {},
+      paginationPage: 0,
       count: 0,
-      lastPage: 0,
       params: {
         page: 1,
         limit: 10,
@@ -37,16 +38,18 @@ class CatalogState extends StateModule {
     // Параметры из URl. Их нужно валидировать, приводить типы и брать только нужные
     const urlParams = qs.parse(window.location.search);
     let validParams = {};
-    if (urlParams.page) validParams.page = Number(urlParams.page) || 1;
-    if (urlParams.limit) validParams.limit = Number(urlParams.limit) || 10;
-    if (urlParams.sort) validParams.sort = urlParams.sort;
-    if (urlParams.query) validParams.query = urlParams.query;
-    if (urlParams.category) validParams.category = urlParams.category;
+    if (this.config.name === 'catalog') {
+      if (urlParams.page) validParams.page = Number(urlParams.page) || 1;
+      if (urlParams.limit) validParams.limit = Number(urlParams.limit) || 10;
+      if (urlParams.sort) validParams.sort = urlParams.sort;
+      if (urlParams.query) validParams.query = urlParams.query;
+      if (urlParams.category) validParams.category = urlParams.category;
+    }
 
     // Итоговые параметры из начальных, из URL и из переданных явно
     const newParams = {...this.initState().params, ...validParams, ...params};
     // Установка параметров и подгрузка данных
-    await this.setParams({params: newParams, eventType: 'click'}, true);
+    await this.setParams({params: newParams}, true);
   }
 
   /**
@@ -58,19 +61,18 @@ class CatalogState extends StateModule {
     // Итоговые параметры из начальных, из URL и из переданных явно
     const newParams = {...this.initState().params, ...params};
     // Установка параметров и подгрузка данных
-    await this.setParams({params: newParams, eventType: 'click'});
+    await this.setParams({params: newParams});
   }
 
   /**
-   * Установка последней страницы
-   * @param lastPage
-   * @return {Promise<void>}
+   * Выделение товара
+   * @param _id Код товара
    */
-  async setLastPage(lastPage) {
+  select(_id) {
     this.setState({
       ...this.getState(),
-      lastPage
-    });
+      selectedItems: {...this.getState().selectedItems, [_id]: !this.getState().selectedItems[_id]}
+    }, 'Выделение товара');
   }
 
   /**
@@ -81,15 +83,29 @@ class CatalogState extends StateModule {
    * @param historyReplace {Boolean} Заменить адрес (true) или сделает новую запись в истории браузера (false)
    * @return {Promise<void>}
    */
-  async setParams({params = {}, eventType}, historyReplace = false) {
+  async setParams({params = {}, eventType = 'defaultEvent'}, historyReplace = false) {
+    const amount = Math.ceil(this.getState().count / Math.max(this.getState().params.limit, 1));
+    // Проверка, что запрошенная страница не превышает последнюю страницу каталога
+    if (this.getState().count && (params.page > amount)) {
+      if (eventType === 'scroll') {
+        this.setState({
+          ...this.getState(),
+          paginationPage: amount
+        });
+      }
+      return;
+    }
+
     const newParams = {...this.getState().params, ...params};
-    if (eventType === 'filter' && this.getState().items.length > 10) newParams.page =  1;
+
+    // Переход на первую страницу если был совершен отбор по фильтру
+    if (eventType === 'filter' && this.getState().items.length > 10) newParams.page = 1;
 
     // Установка новых параметров и признака загрузки
     this.setState({
       ...this.getState(),
       params: newParams,
-      waiting: true
+      waiting: true,
     }, 'Смена параметров каталога');
 
     const apiParams = diff({
@@ -111,18 +127,21 @@ class CatalogState extends StateModule {
     // Установка полученных данных и сброс признака загрузки
     this.setState({
       ...this.getState(),
-      items: ['click', 'filter'].includes(eventType) ? json.result.items : [...this.getState().items, ...json.result.items],
+      items: eventType === 'scroll' ? [...this.getState().items, ...json.result.items] : json.result.items,
       count: json.result.count,
+      paginationPage: (eventType === 'scroll') ? newParams.page - 1 : newParams.page,
       waiting: false
     }, 'Обновление списка товара');
 
     // Запоминаем параметры в URL, которые отличаются от начальных
-    let queryString = qs.stringify(diff(newParams, this.initState().params));
-    const url = window.location.pathname + queryString + window.location.hash;
-    if (historyReplace) {
-      window.history.replaceState({}, '', url);
-    } else {
-      window.history.pushState({}, '', url);
+    if (this.config.name === 'catalog') {
+      let queryString = qs.stringify(diff(newParams, this.initState().params));
+      const url = window.location.pathname + queryString + window.location.hash;
+      if (historyReplace) {
+        window.history.replaceState({}, '', url);
+      } else {
+        window.history.pushState({}, '', url);
+      }
     }
   }
 }

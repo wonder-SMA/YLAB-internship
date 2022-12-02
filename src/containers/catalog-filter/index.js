@@ -11,13 +11,12 @@ import SelectCustom from "@src/components/elements/select-custom";
 import {countries} from '@src/countries.js';
 
 function CatalogFilter(){
-
   const store = useStore();
-
+  const catalog = useSelector(state => (['catalog'].concat(state.modals.withCatalog)).pop());
   const select = useSelector(state => ({
-    sort: state.catalog.params.sort,
-    query: state.catalog.params.query,
-    category: state.catalog.params.category,
+    sort: state[catalog].params.sort,
+    query: state[catalog].params.query,
+    category: state[catalog].params.category,
     categories: state.categories.items,
   }));
 
@@ -25,13 +24,13 @@ function CatalogFilter(){
 
   const callbacks = {
     // Сортировка
-    onSort: useCallback(sort => store.get('catalog').setParams({params: {sort}, eventType: 'filter'}), []),
+    onSort: useCallback(sort => store.get(catalog).setParams({params: {sort}, eventType: 'filter'}), []),
     // Поиск
-    onSearch: useCallback(query => store.get('catalog').setParams({params: {query, page: 1}, eventType: 'filter'}), []),
+    onSearch: useCallback(query => store.get(catalog).setParams({params: {query, page: 1}, eventType: 'filter'}), []),
     // Сброс
-    onReset: useCallback(() => store.get('catalog').resetParams(), []),
+    onReset: useCallback(() => store.get(catalog).resetParams(), []),
     // Фильтр по категории
-    onCategory: useCallback(category => store.get('catalog').setParams({params: {category}, eventType: 'filter'}), []),
+    onCategory: useCallback(category => store.get(catalog).setParams({params: {category}, eventType: 'filter'}), []),
   };
 
   // Опции для полей
@@ -67,7 +66,7 @@ function CatalogFilter(){
         options={options.countries}
         code={true}
       />
-      <Input onChange={callbacks.onSearch} value={select.query} placeholder="Поиск" theme="big"/>
+      <Input onChange={callbacks.onSearch} value={select.query} placeholder="Поиск"/>
       <button onClick={callbacks.onReset}>{t('filter.reset')}</button>
     </LayoutFlex>
   );

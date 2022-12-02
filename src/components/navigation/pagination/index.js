@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import propTypes from "prop-types";
 import {cn as bem} from '@bem-react/classname'
 import './style.css';
@@ -27,19 +27,13 @@ function Pagination(props) {
   // Последняя страница
   if (right < length) items.push(length);
 
-  useEffect(() => {
-    if (items.length) {
-      props.onChange(0, items[items.length - 1]);
-    }
-  }, [])
-
   // Возвращает функцию с замыканием на номер страницы
   const clickHandler = page => {
     return () => props.onChange(page);
   };
 
   return (
-    <ul className={cn()}>
+    <ul className={cn({top: props.top, bottom: !props.top})}>
       {items.map((num, i) => num
         ? (
           <li key={i} className={cn('item', {active: num === props.page})} onClick={clickHandler(num)}>
@@ -53,6 +47,7 @@ function Pagination(props) {
 }
 
 Pagination.propTypes = {
+  top: propTypes.bool,
   page: propTypes.number.isRequired,
   limit: propTypes.number,
   count: propTypes.number,

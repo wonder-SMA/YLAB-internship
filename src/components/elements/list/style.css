@@ -7,6 +7,10 @@
   border-bottom: 1px dashed #ccc;
 }
 
+.List-item_selected {
+  background-color: #eee;
+}
+
 .List-item:first-child {
   border-top: 1px dashed #ccc;
 }

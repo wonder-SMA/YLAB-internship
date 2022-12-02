@@ -3,7 +3,7 @@ import StateModule from "@src/store/module";
 /**
  * Состояние корзины
  */
-class BasketState extends StateModule{
+class BasketState extends StateModule {
 
   /**
    * Начальное состояние
@@ -12,27 +12,59 @@ class BasketState extends StateModule{
   initState() {
     return {
       items: [],
-        sum: 0,
-        amount: 0
+      sum: 0,
+      amount: 0
     };
+  }
+
+  /**
+   * Добавление выделенного товара в корзину
+   * @param selected Объект с выделенными товарами
+   * @return {Promise<void>}
+   */
+  async addSelectedToBasket(selected) {
+    let selectedItem = Object.keys(selected);
+    let sum = this.getState().sum;
+    const items = this.getState().items.map(item => {
+      if (selectedItem.includes(item._id)) {
+        sum += item.price;
+        const index = selectedItem.indexOf(item._id);
+        selectedItem = selectedItem.splice(index, 1);
+        return {...item, amount: item.amount + 1}
+      }
+    })
+    if (selectedItem.length) {
+      for (const _id of selectedItem) {
+        const json = await this.services.api.request({url: `/api/v1/articles/${_id}`});
+        const item = json.result;
+        items.push({...item, amount: 1});
+        sum += item.price;
+      }
+    }
+    this.setState({
+      items,
+      sum,
+      amount: items.length
+    }, 'Добавление в корзину выделенных товаров');
   }
 
   /**
    * Добавление товара в корзину
    * @param _id Код товара
+   * @param quantity Количество товара
    */
-  async addToBasket(_id) {
+  async addToBasket(_id, quantity = 1) {
     let sum = 0;
-    // Ищем товар в корзие, чтобы увеличить его количество. Заодно получаем новый массив items
+    // Ищем товар в корзине, чтобы увеличить его количество. Заодно получаем новый массив items
     let exists = false;
     const items = this.getState().items.map(item => {
       let result = item;
       // Искомый товар для увеличения его количества
       if (item._id === _id) {
         exists = true;
-        result = {...item, amount: item.amount + 1};
+        result = {...item, amount: item.amount + +quantity};
       }
-      // Добавляея в общую сумму
+      // Добавляем в общую сумму
       sum += result.price * result.amount;
       return result
     });
@@ -41,11 +73,10 @@ class BasketState extends StateModule{
     if (!exists) {
       // Поиск товара в каталоге, чтобы его в корзину добавить
       const json = await this.services.api.request({url: `/api/v1/articles/${_id}`});
-
       const item = json.result;
-      items.push({...item, amount: 1});
+      items.push({...item, amount: +quantity});
       // Досчитываем сумму
-      sum += item.price;
+      sum += item.price * quantity;
     }
 
     // Установка состояние, basket тоже нужно сделать новым
@@ -65,7 +96,7 @@ class BasketState extends StateModule{
     const items = this.getState().items.filter(item => {
       // Удаляемый товар
       if (item._id === _id) return false
-      // Подсчёт суммы если твоар не удаляем.
+      // Подсчёт суммы если товар не удаляем.
       sum += item.price * item.amount;
       return true;
     });

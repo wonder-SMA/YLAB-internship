@@ -1,4 +1,4 @@
-import React, {useCallback} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import useSelector from "@src/hooks/use-selector";
 import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
@@ -9,57 +9,75 @@ import Item from "@src/components/catalog/item";
 import ScrollInfinite from "@src/components/navigation/scroll-infinite";
 
 function CatalogList() {
-
   const store = useStore();
-
+  const catalog = useSelector(state => (['catalog'].concat(state.modals.withCatalog)).pop());
   const select = useSelector(state => ({
-    items: state.catalog.items,
-    page: state.catalog.params.page,
-    limit: state.catalog.params.limit,
-    count: state.catalog.count,
-    waiting: state.catalog.waiting,
-    lastPage: state.catalog.lastPage
+    items: state[catalog].items,
+    selectedItems: state[catalog].selectedItems,
+    page: state[catalog].params.page,
+    paginationPage: state[catalog].paginationPage,
+    limit: state[catalog].params.limit,
+    count: state[catalog].count,
+    waiting: state[catalog].waiting,
+    withCatalog: state.modals.withCatalog
   }));
+  const [isTop, setIsTop] = useState(false);
+
+  useEffect(() => {
+    setIsTop(!!select.withCatalog.length)
+  }, [])
 
   const {t} = useTranslate();
 
   const callbacks = {
-    // Добавление в корзину
-    addToBasket: useCallback(_id => store.get('basket').addToBasket(_id), []),
-    // Пагинация
-    onPaginate: useCallback((page, lastPage) => {
-      if (!page && lastPage) {
-        store.get('catalog').setLastPage(lastPage);
-      } else if (page) {
-        store.get('catalog').setParams({params: {page}, eventType: 'click'})
+    // Если на главной: открытие модалки для добавления в корзину, получение результата модалки
+    onAdd: useCallback(_id => {
+      if (catalog === 'catalogModalBasket') {
+        store.get(catalog).select(_id);
+      } else {
+        store.get('modals').open('addToBasket', true).then(result => store.get('basket').addToBasket(_id, result));
       }
     }, []),
+    // Пагинация
+    onPaginate: useCallback(page => store.get(catalog).setParams({params: {page}}), []),
     // Бесконечный скролл
-    onScroll: useCallback(() => store.get('catalog').setParams(
-        {
-          params: {page: select.page + 1},
-          eventType: 'scroll'
-        }
-      ), [select.page, select.lastPage]
+    onScroll: useCallback(() => {
+        store.get(catalog).setParams({params: {page: select.page + 1}, eventType: 'scroll'})
+      }, [select.page]
     ),
+    // Закрытие всех модалок
+    closeModal: useCallback(() => store.get('modals').close('all'), []),
   };
 
   const renders = {
     item: useCallback(item => (
-      <Item item={item} onAdd={callbacks.addToBasket} link={`/articles/${item._id}`} labelAdd={t('article.add')}/>
+      <Item
+        isModalBasket={catalog === 'catalogModalBasket'}
+        item={item}
+        onAdd={callbacks.onAdd}
+        onLink={callbacks.closeModal}
+        link={`/articles/${item._id}`}
+        labelAdd={t('article.add')}
+      />
     ), [t]),
   }
 
   return (
     <ScrollInfinite
+      top={isTop}
       onChange={callbacks.onScroll}
       dataLength={select.items.length}
-      isLastPage={select.page === select.lastPage || !select.lastPage}
     >
       <Spinner active={select.waiting}>
-        <List items={select.items} renderItem={renders.item}/>
-        <Pagination count={select.count} page={select.page} limit={select.limit} onChange={callbacks.onPaginate}/>
+        <List items={select.items} selectedItems={select.selectedItems} renderItem={renders.item}/>
       </Spinner>
+      <Pagination
+        top={isTop}
+        count={select.count}
+        page={select.paginationPage}
+        limit={select.limit}
+        onChange={callbacks.onPaginate}
+      />
     </ScrollInfinite>
   );
 }

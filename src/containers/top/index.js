@@ -6,19 +6,22 @@ import useSelector from "@src/hooks/use-selector";
 import useStore from "@src/hooks/use-store";
 
 function TopContainer() {
-
-  const {t} = useTranslate();
-
   const navigate = useNavigate();
   const location = useLocation();
   const store = useStore();
-
   const select = useSelector(state => ({
     user: state.session.user,
     exists: state.session.exists
   }))
 
+  const {t} = useTranslate();
+
   const callbacks = {
+    // Открыть модалку каталога
+    onOpen: useCallback(() => {
+      store.get('modals').create('catalogModal');
+      store.get('modals').open('catalogModal');
+    }, []),
     // Переход к авторизации
     onSignIn: useCallback(() => {
       navigate('/login', {state: {back: location.pathname}});
@@ -32,6 +35,7 @@ function TopContainer() {
 
   return (
     <LayoutFlex flex="end" indent="small">
+      <button onClick={callbacks.onOpen}>Открыть модалку каталога</button>
       {select.exists && <Link to="/profile">{select.user.profile.name}</Link>}
       {select.exists
         ? <button onClick={callbacks.onSignOut}>{t('session.signOut')}</button>

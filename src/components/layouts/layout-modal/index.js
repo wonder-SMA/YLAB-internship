@@ -1,11 +1,12 @@
 import React, {useEffect, useRef} from 'react';
+import useSelector from "@src/hooks/use-selector";
 import PropTypes from 'prop-types';
 import {cn as bem} from "@bem-react/classname";
 import './style.less';
 
 function LayoutModal(props) {
   const cn = bem('LayoutModal');
-
+  const count = useSelector(state => state.modals.count);
   const frame = useRef();
 
   useEffect(() => {
@@ -15,10 +16,12 @@ function LayoutModal(props) {
     }
     frame.current.style.marginTop = `${top}px`;
     document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = 'auto';
+    if (count === 1) {
+      return () => {
+        document.body.style.overflow = 'auto';
+      }
     }
-  });
+  }, [count]);
 
   return (
     <div className={cn()}>
