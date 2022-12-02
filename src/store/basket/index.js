@@ -23,15 +23,16 @@ class BasketState extends StateModule {
    * @return {Promise<void>}
    */
   async addSelectedToBasket(selected) {
-    let selectedItem = Object.keys(selected);
+    let selectedItem = Object.keys(selected).filter(item => selected[item]);
     let sum = this.getState().sum;
     const items = this.getState().items.map(item => {
       if (selectedItem.includes(item._id)) {
         sum += item.price;
         const index = selectedItem.indexOf(item._id);
-        selectedItem = selectedItem.splice(index, 1);
+        selectedItem.splice(index, 1);
         return {...item, amount: item.amount + 1}
       }
+      return item;
     })
     if (selectedItem.length) {
       for (const _id of selectedItem) {

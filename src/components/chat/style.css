@@ -1,0 +1,8 @@
+.Chat {
+  padding: 8px;
+}
+
+.Chat-error {
+  text-align: center;
+  color: red;
+}

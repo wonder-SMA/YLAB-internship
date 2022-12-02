@@ -1,6 +1,8 @@
 {
-  "title": "Магазин",
+  "title.shop": "Магазин",
+  "title.chat": "Чат",
   "menu.main": "Главная",
+  "menu.chat": "Чат",
   "basket.title": "Корзина",
   "basket.open": "Перейти",
   "basket.close": "Закрыть",

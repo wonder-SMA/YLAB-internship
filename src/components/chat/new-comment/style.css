@@ -1,0 +1,36 @@
+.NewComment {
+  padding: 16px;
+}
+
+.NewComment-input {
+  min-width: 100%;
+  max-width: 100%;
+  min-height: 25px;
+  max-height: 150px;
+}
+
+.NewComment-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.NewComment-buttons > button {
+  width: 100px;
+  height: 25px;
+  margin: 8px;
+  border: none;
+  color: #fff;
+}
+
+.NewComment-buttons > button:active {
+  opacity: .75;
+}
+
+.NewComment-send {
+  background-color: lightseagreen;
+}
+
+.NewComment-delete, .NewComment-delete-all {
+  background-color: indianred;
+}

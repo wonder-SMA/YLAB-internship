@@ -111,7 +111,6 @@
 
 .SelectCustom-options::-webkit-scrollbar-thumb {
   width: 8px;
-  height: 60px;
   background: #E5E6E9;
   border-radius: 5px;
 }

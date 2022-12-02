@@ -1,6 +1,8 @@
 {
-  "title": "Shop",
+  "title.shop": "Shop",
+  "title.chat": "Chat",
   "menu.main": "Main",
+  "menu.chat": "Chat",
   "basket.title": "Cart",
   "basket.open": "Open",
   "basket.close": "Close",

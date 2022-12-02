@@ -1,0 +1,76 @@
+.MessageWindow {
+  height: calc(100vh - 223px - 188px - 16px - 22px);
+  display: flex;
+  padding: 8px;
+  border: 4px solid #423189;
+  border-radius: 8px;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: #E5E6E9 transparent;
+}
+
+.MessageWindow > .SelectCustom-option:hover {
+  background-color: #DBDFFF;
+}
+
+.MessageWindow::-webkit-scrollbar {
+  width: 12px;
+}
+
+.MessageWindow::-webkit-scrollbar-thumb {
+  width: 12px;
+  min-height: 50px;
+  background: #D3D3D3;
+  border-radius: 4px;
+}
+
+.MessageWindow-list {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.MessageWindow-message_wrapper {
+  display: flex;
+  flex-wrap: nowrap;
+  margin-bottom: 20px;
+}
+
+.MessageWindow-message_wrapper_mine .MessageWindow-message_header,
+.MessageWindow-message_wrapper_mine {
+  justify-content: flex-end;
+}
+
+.MessageWindow-message_header {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.MessageWindow-message_author {
+  margin: 0 10px;
+  font-size: 14px;
+  font-weight: bold;
+  color: darkmagenta;
+}
+
+.MessageWindow-message_time {
+  padding-right: 4px;
+  font-size: 10px;
+  font-weight: bold;
+  color: #666666;
+}
+
+.MessageWindow-message_body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  padding: 14px;
+  border-radius: 16px;
+  background-color: #F5F5F5;
+  font-size: 14px;
+  color: black;
+  word-break: break-word;
+}

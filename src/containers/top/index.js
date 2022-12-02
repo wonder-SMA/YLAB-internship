@@ -4,6 +4,7 @@ import useTranslate from "@src/hooks/use-translate";
 import LayoutFlex from "@src/components/layouts/layout-flex";
 import useSelector from "@src/hooks/use-selector";
 import useStore from "@src/hooks/use-store";
+import Avatar from "@src/components/elements/avatar";
 
 function TopContainer() {
   const navigate = useNavigate();
@@ -35,12 +36,13 @@ function TopContainer() {
 
   return (
     <LayoutFlex flex="end" indent="small">
-      <button onClick={callbacks.onOpen}>Открыть модалку каталога</button>
+      {select.exists && <Avatar avatar={select.user.profile.avatar}/>}
       {select.exists && <Link to="/profile">{select.user.profile.name}</Link>}
       {select.exists
         ? <button onClick={callbacks.onSignOut}>{t('session.signOut')}</button>
         : <button onClick={callbacks.onSignIn}>{t('session.signIn')}</button>
       }
+      <button onClick={callbacks.onOpen}>Открыть модалку каталога</button>
     </LayoutFlex>
   );
 }

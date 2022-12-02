@@ -21,7 +21,7 @@ function Main() {
   return (
     <Layout>
       <TopContainer/>
-      <HeadContainer/>
+      <HeadContainer title="title.shop"/>
       <ToolsContainer/>
       <CatalogFilter/>
       <CatalogList/>

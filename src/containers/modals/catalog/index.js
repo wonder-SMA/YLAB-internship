@@ -8,16 +8,18 @@ import LayoutModal from "@src/components/layouts/layout-modal";
 function CatalogModal() {
   const store = useStore();
   const catalog = useSelector(state => (['catalog'].concat(state.modals.withCatalog)).pop());
-  const select = useSelector(state => ({selectedItems: state[catalog].selectedItems}));
+  const select = useSelector(state => ({
+    selectedItems: state[catalog].selectedItems
+  }));
 
   useEffect(() => {
     store.get(catalog).initParams();
   }, []);
 
   // Закрытие модалки
-  const onClose = useCallback(async () => {
+  const onClose = useCallback(() => {
     store.get('modals').close(catalog);
-    if (catalog === 'catalogModalBasket' && Object.keys(select.selectedItems).length) {
+    if (catalog === 'catalogModalBasket' && Object.values(select.selectedItems).includes(true)) {
       store.get('basket').addSelectedToBasket(select.selectedItems);
     }
   }, [select.selectedItems])

@@ -15,6 +15,10 @@ const config ={
   api: {
     baseUrl: ''
   },
+
+  ws: {
+    baseUrl: 'ws://example.front.ylab.io'
+  }
 }
 
 export default config;
