@@ -4,8 +4,8 @@ class Rect extends Tool {
   constructor({canvas, figureProps, a, v, time, id}) {
     super();
     this.canvas = canvas;
-    this.figureProps = figureProps;
     this.ctx = canvas.getContext("2d");
+    this.figureProps = figureProps;
     this.a = a;
     this.v = v;
     this.time = time;
@@ -32,10 +32,15 @@ class Rect extends Tool {
    *    */
   draw({time, dpr, newX, newY, isSelected}) {
     const bottom = this.canvas.height / dpr - this.figureProps.h;
+
     if (this.figureProps.y > bottom) {
       this.figureProps.y = bottom;
+    } else if (this.figureProps.y < bottom) {
+      const dt = (time - this.time) / 1000;
+      this.figureProps.y += this.v * dt + this.a * dt * dt / 2;
     }
 
+    this.ctx.globalAlpha = 1;
     this.ctx.fillStyle = this.figureProps.fillStyle;
     this.ctx.strokeStyle = this.figureProps.strokeStyle;
     this.ctx.lineWidth = this.figureProps.lineWidth;
@@ -55,11 +60,6 @@ class Rect extends Tool {
     this.ctx.closePath();
 
     this.ctx.lineWidth = this.figureProps.lineWidth;
-
-    const dt = (time - this.time) / 1000;
-    if (this.figureProps.y < bottom) {
-      this.figureProps.y += this.v * dt + this.a * dt * dt / 2;
-    }
   }
 }
 

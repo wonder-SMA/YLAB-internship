@@ -33,10 +33,10 @@ function ToolBar({canvasSize, setToolHandler, setPropsHandler, onDelete, figureP
         <InputNumber name="w" step="1" min="10" max="500" value={figureProps.w}
                      onChange={setPropsHandler}>Ширина:</InputNumber>
 
-        <InputColor name="fillStyle" value={figureProps.fillStyle}
+        <InputColor name="fillStyle" value={figureProps.fillStyle || '#ffffff'}
                     onChange={setPropsHandler}>Заливка:</InputColor>
 
-        <InputColor name="strokeStyle" value={figureProps.strokeStyle}
+        <InputColor name="strokeStyle" value={figureProps.strokeStyle || '#000000'}
                     onChange={setPropsHandler}>Обводка:</InputColor>
       </div>
     </div>
@@ -56,10 +56,10 @@ ToolBar.propTypes = {
     y: PropTypes.number.isRequired,
     w: PropTypes.number.isRequired,
     h: PropTypes.number.isRequired,
-    fillStyle: PropTypes.string.isRequired,
-    strokeStyle: PropTypes.string.isRequired,
-    lineWidth: PropTypes.number.isRequired,
-    lineCap: PropTypes.string.isRequired
+    fillStyle: PropTypes.string,
+    strokeStyle: PropTypes.string,
+    lineWidth: PropTypes.number,
+    lineCap: PropTypes.string
   })
 }
 
@@ -68,9 +68,12 @@ ToolBar.defaultProps = {
     width: 300,
     height: 150
   },
-  setPropsHandler: () => {},
-  setToolHandler: () => {},
-  onDelete: () => {}
+  setPropsHandler: () => {
+  },
+  setToolHandler: () => {
+  },
+  onDelete: () => {
+  }
 }
 
 export default React.memo(ToolBar);

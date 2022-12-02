@@ -28,8 +28,8 @@ function InputColor(props) {
 
 InputColor.PropTypes = {
   children: PropTypes.element,
-  value: PropTypes.string,
-  name: PropTypes.string,
+  value: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
   onChange: PropTypes.func,
 }
 

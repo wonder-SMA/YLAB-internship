@@ -12,6 +12,7 @@ import Tool from "@src/components/canvas/tools";
 import * as tools from "@src/components/canvas/tools/exports";
 import * as uuid from "uuid";
 import throttle from "lodash.throttle";
+import leaves from "@src/img/leaves/export";
 
 function Paint() {
   const store = useStore();
@@ -22,9 +23,36 @@ function Paint() {
     fps: state.paint.fps,
     a: state.paint.a,
     v: state.paint.v,
+    leaveRepeat: state.paint.leaveRepeat
   }));
   const [tool, setTool] = useState(null);
   const canvasRef = useRef(null);
+
+  useEffect(() => {
+    // Эффект на запуск отрисовки листопада
+    if (tool) {
+      let extraLeaves = [];
+      for (let i = 0; i !== select.leaveRepeat; i++) {
+        extraLeaves = [...extraLeaves, ...leaves];
+      }
+      extraLeaves.forEach(leave => {
+        const img = new Image();
+        img.addEventListener('load', () => {
+          tool.addFigure(tools['Leave'], {
+            id: uuid.v4(),
+            figureProps: {
+              w: img.width,
+              h: img.height,
+              strokeStyle: '#000000'
+            },
+            img,
+            time: performance.now()
+          });
+        });
+        img.src = leave;
+      })
+    }
+  }, [tool])
 
   useEffect(() => {
     if (canvasRef.current) {

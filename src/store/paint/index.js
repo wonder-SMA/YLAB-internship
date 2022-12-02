@@ -1,5 +1,6 @@
 import StateModule from "@src/store/module";
 import shallowequal from "shallowequal";
+import {repeat} from "lodash.debounce";
 
 /**
  * Состояние канваса
@@ -26,7 +27,8 @@ class PaintState extends StateModule {
       },
       a: 9.81,
       v: 0,
-      fps: 60
+      fps: 60,
+      leaveRepeat: 5
     };
   }
 

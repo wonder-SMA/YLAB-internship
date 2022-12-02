@@ -31,7 +31,7 @@ function InputNumber(props) {
 
 InputNumber.PropTypes = {
   children: PropTypes.element,
-  value: PropTypes.string,
+  value: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func,
   max: PropTypes.number.isRequired,
